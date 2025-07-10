@@ -450,8 +450,9 @@
             border-radius: 20px;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
+            position: relative;
         }
 
         .message-detail-header {
@@ -521,6 +522,10 @@
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s ease;
+            position: sticky;
+            bottom: 0;
+            margin-top: 20px;
+            width: 100%;
         }
 
         .delete-message-btn:hover {
@@ -788,6 +793,8 @@
         // Messages storage
         let messages = [];
         let currentMessageId = null;
+        let isPolling = false;
+        let pollInterval = null;
         
         // Admin password
         const ADMIN_PASSWORD = 'sweetadmin123';
@@ -826,7 +833,15 @@
                 const response = await fetch(`${API_BASE}/api/messages`);
                 const data = await response.json();
                 if (data.success) {
+                    const previousCount = messages.length;
                     messages = data.messages;
+                    
+                    // If we're on admin page and messages changed, update bubbles
+                    if (document.getElementById('adminPage').style.display === 'block' && 
+                        messages.length !== previousCount) {
+                        displayMessageBubbles();
+                    }
+                    
                     return true;
                 }
                 console.error('Failed to fetch messages:', data.error);
@@ -835,6 +850,25 @@
                 console.error('Error fetching messages:', error);
                 return false;
             }
+        }
+
+        // Start real-time polling
+        function startPolling() {
+            if (isPolling) return;
+            
+            isPolling = true;
+            pollInterval = setInterval(async () => {
+                await fetchMessages();
+            }, 2000); // Poll every 2 seconds
+        }
+
+        // Stop real-time polling
+        function stopPolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+            isPolling = false;
         }
 
         async function sendMessage(sender, messageText) {
@@ -852,7 +886,17 @@
                 
                 const data = await response.json();
                 if (data.success) {
+                    // Add to local array immediately for instant feedback
                     messages.push(data.message);
+                    
+                    // If admin page is open, update bubbles immediately
+                    if (document.getElementById('adminPage').style.display === 'block') {
+                        displayMessageBubbles();
+                    }
+                    
+                    // Force refresh messages from server
+                    setTimeout(() => fetchMessages(), 500);
+                    
                     return true;
                 }
                 console.error('Failed to send message:', data.error);
@@ -871,7 +915,15 @@
                 
                 const data = await response.json();
                 if (data.success) {
+                    // Remove from local array immediately for instant feedback
                     messages = messages.filter(msg => msg.id !== messageId);
+                    
+                    // Update bubbles immediately
+                    displayMessageBubbles();
+                    
+                    // Force refresh messages from server
+                    setTimeout(() => fetchMessages(), 500);
+                    
                     return true;
                 }
                 console.error('Failed to delete message:', data.error);
@@ -966,6 +1018,9 @@
                 // Fetch latest messages and display bubbles
                 await fetchMessages();
                 displayMessageBubbles();
+                
+                // Start real-time polling for admin page
+                startPolling();
             } else {
                 errorMsg.style.display = 'block';
                 document.getElementById('adminPasswordInput').value = '';
@@ -992,6 +1047,9 @@
         document.getElementById('backBtn').addEventListener('click', function() {
             document.getElementById('adminPage').style.display = 'none';
             document.getElementById('mainPage').style.display = 'block';
+            
+            // Stop polling when leaving admin page
+            stopPolling();
         });
 
         // Message detail modal handlers
@@ -1032,8 +1090,30 @@
                 
                 if (success) {
                     document.getElementById('deleteConfirmationModal').style.display = 'none';
-                    displayMessageBubbles();
                     currentMessageId = null;
+                    
+                    // Show a brief success message
+                    const bubble = document.createElement('div');
+                    bubble.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #28a745;
+                        color: white;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        z-index: 6000;
+                        font-size: 14px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    `;
+                    bubble.textContent = '✓ Message deleted successfully';
+                    document.body.appendChild(bubble);
+                    
+                    setTimeout(() => {
+                        if (bubble.parentNode) {
+                            bubble.parentNode.removeChild(bubble);
+                        }
+                    }, 3000);
                 } else {
                     alert('Failed to delete message. Please try again.');
                 }
@@ -1132,6 +1212,24 @@
 
         // Initialize
         createHearts();
+        
+        // Clean up polling when page is closed/refreshed
+        window.addEventListener('beforeunload', function() {
+            stopPolling();
+        });
+        
+        // Handle visibility changes to manage polling
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Page is hidden, stop polling to save resources
+                stopPolling();
+            } else {
+                // Page is visible again, restart polling if on admin page
+                if (document.getElementById('adminPage').style.display === 'block') {
+                    startPolling();
+                }
+            }
+        });
     </script>
 </body>
 </html>
