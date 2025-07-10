@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sweet Messages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="icon" href="/iconicon.png" type="image/png">
+
     <style>
         * {
             margin: 0;
@@ -12,53 +15,11 @@
         }
 
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
             min-height: 100vh;
+            position: relative;
             overflow-x: hidden;
-        }
-
-        .container {
-            position: relative;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .title {
-            font-size: 3rem;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 20px;
-        }
-
-        .admin-button {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .admin-button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
         }
 
         .hearts-container {
@@ -68,12 +29,12 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
         }
 
         .heart {
             position: absolute;
-            color: rgba(255,192,203,0.7);
+            color: rgba(255, 182, 193, 0.3);
             font-size: 20px;
             animation: float 6s ease-in-out infinite;
         }
@@ -83,482 +44,617 @@
             50% { transform: translateY(-20px) rotate(180deg); }
         }
 
-        .message-form {
-            background: rgba(255,255,255,0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            margin: 0 auto 40px;
-            max-width: 500px;
-            position: relative;
-            z-index: 10;
+        /* Main Page Styles */
+        .main-page {
+            display: block;
         }
 
-        .form-group {
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+
+        .title {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #8b5a83;
+            font-weight: 400;
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 192, 203, 0.3);
+        }
+
+        .input-group {
             margin-bottom: 20px;
         }
 
-        .form-group label {
+        .input-label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
+            font-weight: 600;
+            color: #d63384;
+            font-size: 1.1rem;
         }
 
-        .form-group input,
-        .form-group textarea {
+        .input-field {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            padding: 15px 20px;
+            border: 2px solid #ffc0cb;
+            border-radius: 15px;
             font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .input-field:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #ff69b4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+            transform: scale(1.02);
         }
 
-        .form-group textarea {
-            resize: vertical;
+        .textarea-field {
             min-height: 100px;
+            resize: vertical;
         }
 
-        .submit-button {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ffc0cb;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #d63384;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .admin-toggle:hover {
+            background: #ffc0cb;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        /* Admin Login Page Styles */
+        .admin-login-page {
+            display: none;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 192, 203, 0.3);
+            text-align: center;
             width: 100%;
         }
 
-        .submit-button:hover {
+        .login-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            font-size: 1.1rem;
+            color: #8b5a83;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ffc0cb;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+            transform: scale(1.02);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 0.9rem;
+            display: none;
+            background: rgba(255, 71, 87, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .back-to-main {
+            background: #f8f9fa;
+            color: #666;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-main:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        /* Admin Page Styles */
+        .admin-page {
+            display: none;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+
+        .admin-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5rem;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .admin-subtitle {
+            font-size: 1.1rem;
+            color: #8b5a83;
+            font-weight: 400;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ffc0cb;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #d63384;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #ffc0cb;
+            color: white;
+            transform: scale(1.1);
         }
 
         .bubbles-container {
             position: relative;
-            min-height: 400px;
-            z-index: 5;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 70vh;
         }
 
         .message-bubble {
             position: absolute;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 50%;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            font-size: 0.9rem;
-            color: #333;
             padding: 20px;
-            animation: bubble-float 4s ease-in-out infinite;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 192, 203, 0.5);
+            overflow: hidden;
         }
 
         .message-bubble:hover {
-            transform: scale(1.1);
-            z-index: 100;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-color: #ff69b4;
+        }
+
+        .bubble-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .bubble-sender {
+            font-weight: 700;
+            color: #d63384;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .bubble-preview {
+            color: #666;
+            font-size: 0.8rem;
+            line-height: 1.2;
         }
 
         .bubble-small {
             width: 120px;
             height: 120px;
-            font-size: 0.8rem;
         }
 
         .bubble-medium {
             width: 150px;
             height: 150px;
-            font-size: 0.9rem;
         }
 
         .bubble-large {
             width: 180px;
             height: 180px;
-            font-size: 1rem;
-        }
-
-        @keyframes bubble-float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .no-messages {
-            text-align: center;
-            color: rgba(255,255,255,0.8);
-            font-size: 1.5rem;
-            margin-top: 50px;
         }
 
         .no-messages-admin {
             text-align: center;
-            color: rgba(255,255,255,0.8);
-            font-size: 1.5rem;
-            margin-top: 50px;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: white;
-            margin: 10% auto;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-            animation: modalSlideIn 0.3s ease;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .modal-body {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .message-preview {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .message-preview-sender {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .message-preview-text {
-            color: #555;
+            color: #8b5a83;
+            font-size: 1.2rem;
+            margin-top: 100px;
             font-style: italic;
         }
 
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .modal-button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .modal-button-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .modal-button-cancel:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .modal-button-delete {
-            background: linear-gradient(45deg, #dc3545, #c82333);
-            color: white;
-        }
-
-        .modal-button-delete:hover {
-            background: linear-gradient(45deg, #c82333, #bd2130);
-            transform: translateY(-2px);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .close:hover {
-            color: #333;
-        }
-
-        /* Login Page Styles */
-        .page {
+        /* Message Detail Modal */
+        .message-detail-modal {
             display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .login-container {
-            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 4000;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
         }
 
-        .login-form {
-            background: rgba(255,255,255,0.95);
+        .message-detail-content {
+            background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        .login-title {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .back-button {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        /* Admin Page Styles */
-        .admin-header {
+        .message-detail-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ffc0cb;
         }
 
-        .admin-title {
-            font-size: 2.5rem;
+        .message-detail-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.5rem;
+            color: #d63384;
+        }
+
+        .close-detail-btn {
+            background: #ff69b4;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Message Detail Modal */
-        .message-detail {
+        .message-detail-info {
+            background: rgba(255, 192, 203, 0.1);
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
         }
 
-        .message-sender {
-            font-weight: bold;
-            color: #667eea;
+        .message-detail-sender {
+            font-weight: 700;
+            color: #d63384;
+            font-size: 1.1rem;
             margin-bottom: 5px;
         }
 
-        .message-text {
-            color: #333;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .message-timestamp {
-            color: #666;
+        .message-detail-date {
+            color: #8b5a83;
             font-size: 0.9rem;
         }
 
+        .message-detail-text {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
         .delete-message-btn {
-            background: linear-gradient(45deg, #dc3545, #c82333);
+            background: #ff4757;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
+            border-radius: 10px;
+            padding: 12px 20px;
             cursor: pointer;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 15px;
         }
 
         .delete-message-btn:hover {
-            background: linear-gradient(45deg, #c82333, #bd2130);
+            background: #ff3838;
             transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
-            .title {
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            .title, .admin-title {
                 font-size: 2rem;
             }
 
-            .modal-content {
-                margin: 20% auto;
+            .message-card {
                 padding: 20px;
             }
 
-            .modal-buttons {
-                flex-direction: column;
+            .bubble-small {
+                width: 100px;
+                height: 100px;
             }
 
-            .modal-button {
-                min-width: auto;
-                width: 100%;
+            .bubble-medium {
+                width: 120px;
+                height: 120px;
+            }
+
+            .bubble-large {
+                width: 140px;
+                height: 140px;
+            }
+
+            .message-detail-content {
+                padding: 20px;
+            }
+
+            .bubbles-container {
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="hearts-container" id="heartsContainer"></div>
+
     <!-- Main Page -->
-    <div id="mainPage" class="page active">
+    <div class="main-page" id="mainPage">
         <div class="container">
-            <div class="hearts-container" id="heartsContainer"></div>
-            
             <div class="header">
-                <h1 class="title">💌 Sweet Messages</h1>
-                <p class="subtitle">Share your sweetest thoughts with the world</p>
-                <button class="admin-button" id="adminBtn">Admin Panel</button>
+                <h1 class="title">Sweet Messages to our Birthday Celebrant</h1>
+                <p class="subtitle">Send a lovely message to Ate Czhelssy</p>
             </div>
 
-            <div class="message-form">
-                <div class="form-group">
-                    <label for="senderName">Your Name:</label>
-                    <input type="text" id="senderName" placeholder="Enter your name" required>
+            <div class="message-card">
+                <div class="success-message" id="successMessage">
+                    Your message has been sent successfully!
                 </div>
-                <div class="form-group">
-                    <label for="messageText">Your Sweet Message:</label>
-                    <textarea id="messageText" placeholder="Write your sweet message here..." required></textarea>
-                </div>
-                <button type="submit" class="submit-button" id="submitBtn">Send Sweet Message 💕</button>
-            </div>
 
-            <div class="bubbles-container" id="bubblesContainer">
-                <div class="no-messages" id="noMessages">No sweet messages yet... Be the first to share! 💕</div>
+                <form id="messageForm">
+                    <div class="input-group">
+                        <label class="input-label" for="senderName">Your Name</label>
+                        <input type="text" id="senderName" class="input-field" placeholder="Enter your sweet name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="messageText">Your Message</label>
+                        <textarea id="messageText" class="input-field textarea-field" placeholder="Write your heartfelt message here..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
             </div>
+        </div>
+
+        <div class="admin-toggle" id="adminToggle" title="Admin Access">
+            ⚙
         </div>
     </div>
 
     <!-- Admin Login Page -->
-    <div id="adminLoginPage" class="page">
+    <div class="admin-login-page" id="adminLoginPage">
         <div class="login-container">
-            <div class="login-form">
-                <h2 class="login-title">🔐 Admin Login</h2>
-                <div class="error-message" id="loginError">Incorrect password. Please try again.</div>
-                <div class="form-group">
-                    <input type="password" id="adminPasswordInput" placeholder="Enter admin password" required>
+            <div class="login-card">
+                <h1 class="login-title">Admin Portal</h1>
+                <p class="login-subtitle">Enter your password to access the message bubbles</p>
+                
+                <div class="error-message" id="loginError">
+                    Incorrect password. Please try again.
                 </div>
-                <button class="submit-button" id="adminLoginBtn">Login</button>
-                <button class="back-button" id="backToMainFromLogin">Back to Messages</button>
+                
+                <input type="password" id="adminPasswordInput" class="password-input" placeholder="Enter admin password">
+                
+                <button class="login-btn" id="adminLoginBtn">Access Dashboard</button>
+                
+                <button class="back-to-main" id="backToMainFromLogin">Back to Messages</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Page -->
-    <div id="adminPage" class="page">
-        <div class="container">
-            <div class="admin-header">
-                <h1 class="admin-title">🛠️ Admin Panel</h1>
-                <button class="back-button" id="backBtn">Back to Messages</button>
-            </div>
+    <div class="admin-page" id="adminPage">
+        <button class="back-btn" id="backBtn" title="Back to Messages">←</button>
+        
+        <div class="admin-header">
+            <h1 class="admin-title">Message Bubbles</h1>
+            <p class="admin-subtitle">Click on any bubble to read the full message</p>
+        </div>
 
-            <div class="bubbles-container" id="bubblesContainer">
-                <div class="no-messages-admin" id="noMessagesAdmin">No messages floating around yet...</div>
+        <div class="bubbles-container" id="bubblesContainer">
+            <div class="no-messages-admin" id="noMessagesAdmin">
+                No messages floating around yet...
             </div>
         </div>
     </div>
 
     <!-- Message Detail Modal -->
-    <div id="messageDetailModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeDetailBtn">&times;</span>
-            <div class="modal-header">
-                <h2 class="modal-title">💌 Message Details</h2>
+    <div class="message-detail-modal" id="messageDetailModal">
+        <div class="message-detail-content">
+            <div class="message-detail-header">
+                <h3 class="message-detail-title">Message Details</h3>
+                <button class="close-detail-btn" id="closeDetailBtn">×</button>
             </div>
-            <div class="modal-body">
-                <div class="message-detail">
-                    <div class="message-sender" id="modalSender"></div>
-                    <div class="message-text" id="modalMessage"></div>
-                    <div class="message-timestamp" id="modalTimestamp"></div>
-                </div>
-                <button class="delete-message-btn" id="deleteMessageBtn">Delete Message</button>
+            
+            <div class="message-detail-info">
+                <div class="message-detail-sender" id="detailSender"></div>
+                <div class="message-detail-date" id="detailDate"></div>
             </div>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteConfirmModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeDeleteConfirmBtn">&times;</span>
-            <div class="modal-header">
-                <h2 class="modal-title">⚠️ Confirm Delete</h2>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this message? This action cannot be undone.</p>
-                
-                <div class="message-preview">
-                    <div class="message-preview-sender" id="confirmModalSender"></div>
-                    <div class="message-preview-text" id="confirmModalMessage"></div>
-                </div>
-                
-                <div class="modal-buttons">
-                    <button class="modal-button modal-button-cancel" id="cancelDeleteBtn">Cancel</button>
-                    <button class="modal-button modal-button-delete" id="confirmDeleteBtn">Delete Message</button>
-                </div>
-            </div>
+            
+            <div class="message-detail-text" id="detailText"></div>
+            
+            <button class="delete-message-btn" id="deleteMessageBtn">Delete Message</button>
         </div>
     </div>
 
@@ -656,186 +752,61 @@
         // Create floating hearts
         function createHearts() {
             const heartsContainer = document.getElementById('heartsContainer');
+            const heartSymbols = ['♥', '♡', '❤', '💕', '💖'];
+            
             for (let i = 0; i < 15; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'heart';
-                heart.innerHTML = '💕';
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
                 heart.style.left = Math.random() * 100 + '%';
                 heart.style.top = Math.random() * 100 + '%';
                 heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
                 heartsContainer.appendChild(heart);
             }
         }
 
-        // Display message bubbles for public view
-        function displayPublicBubbles() {
-            const bubblesContainer = document.getElementById('bubblesContainer');
-            const noMessagesDiv = document.getElementById('noMessages');
+        // Form submission
+        document.getElementById('messageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            if (messages.length === 0) {
-                noMessagesDiv.style.display = 'block';
-                bubblesContainer.innerHTML = '<div class="no-messages">No sweet messages yet... Be the first to share! 💕</div>';
-                return;
-            }
-            
-            noMessagesDiv.style.display = 'none';
-            bubblesContainer.innerHTML = '';
-            
-            messages.forEach((msg, index) => {
-                const bubble = document.createElement('div');
-                bubble.className = 'message-bubble';
-                
-                // Random bubble size
-                const sizes = ['bubble-small', 'bubble-medium', 'bubble-large'];
-                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
-                bubble.classList.add(randomSize);
-                
-                // Random position
-                const containerWidth = bubblesContainer.offsetWidth || 800;
-                const containerHeight = bubblesContainer.offsetHeight || 600;
-                const bubbleSize = randomSize === 'bubble-small' ? 120 : randomSize === 'bubble-medium' ? 150 : 180;
-                
-                const maxX = containerWidth - bubbleSize - 20;
-                const maxY = containerHeight - bubbleSize - 20;
-                
-                bubble.style.left = Math.random() * Math.max(maxX, 0) + 'px';
-                bubble.style.top = Math.random() * Math.max(maxY, 0) + 'px';
-                
-                // Random colors
-                const colors = [
-                    'rgba(255, 192, 203, 0.3)',
-                    'rgba(255, 182, 193, 0.3)',
-                    'rgba(255, 218, 185, 0.3)',
-                    'rgba(230, 230, 250, 0.3)',
-                    'rgba(255, 240, 245, 0.3)'
-                ];
-                bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Content
-                const preview = msg.message.length > 30 ? msg.message.substring(0, 30) + '...' : msg.message;
-                bubble.innerHTML = `<div style="text-align: center;"><strong>${msg.sender}</strong><br><small>${preview}</small></div>`;
-                
-                bubblesContainer.appendChild(bubble);
-            });
-        }
-
-        // Display message bubbles for admin view
-        function displayMessageBubbles() {
-            const bubblesContainer = document.getElementById('bubblesContainer');
-            const noMessagesDiv = document.getElementById('noMessagesAdmin');
-            
-            if (messages.length === 0) {
-                noMessagesDiv.style.display = 'block';
-                bubblesContainer.innerHTML = '<div class="no-messages-admin">No messages floating around yet...</div>';
-                return;
-            }
-            
-            noMessagesDiv.style.display = 'none';
-            bubblesContainer.innerHTML = '';
-            
-            messages.forEach((msg, index) => {
-                const bubble = document.createElement('div');
-                bubble.className = 'message-bubble';
-                
-                // Random bubble size
-                const sizes = ['bubble-small', 'bubble-medium', 'bubble-large'];
-                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
-                bubble.classList.add(randomSize);
-                
-                // Random position
-                const containerWidth = bubblesContainer.offsetWidth || 800;
-                const containerHeight = bubblesContainer.offsetHeight || 600;
-                const bubbleSize = randomSize === 'bubble-small' ? 120 : randomSize === 'bubble-medium' ? 150 : 180;
-                
-                const maxX = containerWidth - bubbleSize - 20;
-                const maxY = containerHeight - bubbleSize - 20;
-                
-                bubble.style.left = Math.random() * Math.max(maxX, 0) + 'px';
-                bubble.style.top = Math.random() * Math.max(maxY, 0) + 'px';
-                
-                // Random colors
-                const colors = [
-                    'rgba(255, 192, 203, 0.3)',
-                    'rgba(255, 182, 193, 0.3)',
-                    'rgba(255, 218, 185, 0.3)',
-                    'rgba(230, 230, 250, 0.3)',
-                    'rgba(255, 240, 245, 0.3)'
-                ];
-                bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Content
-                const preview = msg.message.length > 30 ? msg.message.substring(0, 30) + '...' : msg.message;
-                bubble.innerHTML = `<div style="text-align: center;"><strong>${msg.sender}</strong><br><small>${preview}</small></div>`;
-                
-                // Add click event for admin
-                bubble.addEventListener('click', function() {
-                    showMessageDetail(msg);
-                });
-                
-                bubblesContainer.appendChild(bubble);
-            });
-        }
-
-        // Show message detail modal
-        function showMessageDetail(message) {
-            currentMessageId = message.id;
-            document.getElementById('modalSender').textContent = message.sender;
-            document.getElementById('modalMessage').textContent = message.message;
-            document.getElementById('modalTimestamp').textContent = `Sent: ${message.timestamp}`;
-            document.getElementById('messageDetailModal').style.display = 'block';
-        }
-
-        // Show delete confirmation modal
-        function showDeleteConfirmation(message) {
-            document.getElementById('confirmModalSender').textContent = `From: ${message.sender}`;
-            document.getElementById('confirmModalMessage').textContent = message.message;
-            document.getElementById('deleteConfirmModal').style.display = 'block';
-        }
-
-        // Initialize app
-        async function init() {
-            createHearts();
-            await fetchMessages();
-            displayPublicBubbles();
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', init);
-
-        // Submit message
-        document.getElementById('submitBtn').addEventListener('click', async function() {
-            const sender = document.getElementById('senderName').value.trim();
+            const senderName = document.getElementById('senderName').value.trim();
             const messageText = document.getElementById('messageText').value.trim();
             
-            if (!sender || !messageText) {
-                alert('Please fill in both your name and message!');
-                return;
-            }
-            
-            const success = await sendMessage(sender, messageText);
-            
-            if (success) {
-                document.getElementById('senderName').value = '';
-                document.getElementById('messageText').value = '';
-                displayPublicBubbles();
-            } else {
-                alert('Failed to send message. Please try again.');
+            if (senderName && messageText) {
+                const success = await sendMessage(senderName, messageText);
+                
+                if (success) {
+                    // Show success message
+                    const successMsg = document.getElementById('successMessage');
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 3000);
+                    
+                    // Clear form
+                    document.getElementById('messageForm').reset();
+                } else {
+                    alert('Failed to send message. Please try again.');
+                }
             }
         });
 
-        // Admin button
-        document.getElementById('adminBtn').addEventListener('click', function() {
+        // Admin toggle - go directly to login page
+        document.getElementById('adminToggle').addEventListener('click', function() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('adminLoginPage').style.display = 'block';
             document.getElementById('adminPasswordInput').focus();
         });
 
-        // Admin login
+        // Admin login handlers
         document.getElementById('adminLoginBtn').addEventListener('click', async function() {
             const password = document.getElementById('adminPasswordInput').value;
             const errorMsg = document.getElementById('loginError');
             
-            if (password === ADMIN_PASSWORD) {
+            const isValid = await verifyAdminPassword(password);
+            
+            if (isValid) {
                 document.getElementById('adminLoginPage').style.display = 'none';
                 document.getElementById('adminPage').style.display = 'block';
                 document.getElementById('adminPasswordInput').value = '';
@@ -883,63 +854,93 @@
             }
         });
 
-        // Delete message button - now shows confirmation modal
-        document.getElementById('deleteMessageBtn').addEventListener('click', function() {
-            if (currentMessageId) {
-                const message = messages.find(msg => msg.id === currentMessageId);
-                if (message) {
-                    document.getElementById('messageDetailModal').style.display = 'none';
-                    showDeleteConfirmation(message);
-                }
-            }
-        });
-
-        // Delete confirmation modal handlers
-        document.getElementById('closeDeleteConfirmBtn').addEventListener('click', function() {
-            document.getElementById('deleteConfirmModal').style.display = 'none';
-        });
-
-        document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
-            document.getElementById('deleteConfirmModal').style.display = 'none';
-        });
-
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
-            if (currentMessageId) {
+        // Delete message
+        document.getElementById('deleteMessageBtn').addEventListener('click', async function() {
+            if (currentMessageId && confirm('Are you sure you want to delete this message?')) {
                 const success = await deleteMessage(currentMessageId);
                 
                 if (success) {
-                    document.getElementById('deleteConfirmModal').style.display = 'none';
+                    document.getElementById('messageDetailModal').style.display = 'none';
                     displayMessageBubbles();
-                    currentMessageId = null;
                 } else {
                     alert('Failed to delete message. Please try again.');
                 }
             }
         });
 
-        // Close modals when clicking outside
-        document.getElementById('deleteConfirmModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
+        // Display message bubbles
+        function displayMessageBubbles() {
+            const bubblesContainer = document.getElementById('bubblesContainer');
+            const noMessagesDiv = document.getElementById('noMessagesAdmin');
+            
+            if (messages.length === 0) {
+                noMessagesDiv.style.display = 'block';
+                bubblesContainer.innerHTML = '<div class="no-messages-admin">No messages floating around yet...</div>';
+                return;
             }
-        });
+            
+            noMessagesDiv.style.display = 'none';
+            bubblesContainer.innerHTML = '';
+            
+            messages.forEach((msg, index) => {
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble';
+                
+                // Random bubble size
+                const sizes = ['bubble-small', 'bubble-medium', 'bubble-large'];
+                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+                bubble.classList.add(randomSize);
+                
+                // Random position
+                const containerWidth = bubblesContainer.offsetWidth || 800;
+                const containerHeight = bubblesContainer.offsetHeight || 600;
+                const bubbleSize = randomSize === 'bubble-small' ? 120 : randomSize === 'bubble-medium' ? 150 : 180;
+                
+                const maxX = containerWidth - bubbleSize - 20;
+                const maxY = containerHeight - bubbleSize - 20;
+                
+                bubble.style.left = Math.random() * Math.max(maxX, 0) + 'px';
+                bubble.style.top = Math.random() * Math.max(maxY, 0) + 'px';
+                
+                // Random colors
+                const colors = [
+                    'rgba(255, 192, 203, 0.3)',
+                    'rgba(255, 182, 193, 0.3)',
+                    'rgba(255, 218, 185, 0.3)',
+                    'rgba(230, 230, 250, 0.3)',
+                    'rgba(255, 240, 245, 0.3)'
+                ];
+                bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Content
+                const preview = msg.message.length > 30 ? msg.message.substring(0, 30) + '...' : msg.message;
+                bubble.innerHTML = `
+                    <div class="bubble-content">
+                        <div class="bubble-sender">${msg.sender}</div>
+                        <div class="bubble-preview">${preview}</div>
+                    </div>
+                `;
+                
+                // Click handler
+                bubble.addEventListener('click', function() {
+                    showMessageDetail(msg);
+                });
+                
+                bubblesContainer.appendChild(bubble);
+            });
+        }
 
-        // Enter key for message submission
-        document.getElementById('messageText').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                document.getElementById('submitBtn').click();
-            }
-        });
+        // Show message detail
+        function showMessageDetail(message) {
+            currentMessageId = message.id;
+            document.getElementById('detailSender').textContent = message.sender;
+            document.getElementById('detailDate').textContent = message.timestamp;
+            document.getElementById('detailText').textContent = message.message;
+            document.getElementById('messageDetailModal').style.display = 'flex';
+        }
 
-        // Handle ESC key to close modals
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                // Close any open modals
-                document.getElementById('messageDetailModal').style.display = 'none';
-                document.getElementById('deleteConfirmModal').style.display = 'none';
-            }
-        });
+        // Initialize
+        createHearts();
     </script>
 </body>
 </html>
