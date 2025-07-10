@@ -1,3 +1,10 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,23 +37,19 @@ export default async function handler(req, res) {
       });
     }
 
-    // Get current messages
-    const messages = global.messages || [];
-    const initialLength = messages.length;
+    // Delete the message
+    const { error } = await supabase
+      .from('messages')
+      .delete()
+      .eq('id', messageId);
 
-    // Filter out the message to delete
-    const filteredMessages = messages.filter(msg => msg.id !== messageId);
-    
-    // Check if message was found and deleted
-    if (filteredMessages.length === initialLength) {
-      return res.status(404).json({ 
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ 
         success: false, 
-        error: 'Message not found' 
+        error: 'Database error' 
       });
     }
-
-    // Update global messages
-    global.messages = filteredMessages;
 
     return res.status(200).json({ 
       success: true, 

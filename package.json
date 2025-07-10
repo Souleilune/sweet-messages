@@ -15,5 +15,8 @@
       "src": "/(.*)",
       "dest": "/public/$1"
     }
-  ]
+  ],
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.4"
+  }
 }

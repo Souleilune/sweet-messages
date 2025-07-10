@@ -1,3 +1,10 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,15 +16,24 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Simple in-memory storage (resets on each deployment)
-  // For production, use a database like Supabase or PlanetScale
-  const messages = global.messages || [];
-
   try {
     if (req.method === 'GET') {
+      const { data: messages, error } = await supabase
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Database error' 
+        });
+      }
+
       return res.status(200).json({ 
         success: true, 
-        messages: messages 
+        messages: messages || [] 
       });
     }
 
@@ -38,21 +54,30 @@ export default async function handler(req, res) {
         });
       }
 
-      // Create new message
-      const newMessage = {
-        id: Date.now(),
-        sender: String(sender).trim(),
-        message: String(message).trim(),
-        timestamp: new Date().toLocaleString()
-      };
+      // Insert new message
+      const { data, error } = await supabase
+        .from('messages')
+        .insert([
+          {
+            sender: String(sender).trim(),
+            message: String(message).trim(),
+            timestamp: new Date().toLocaleString()
+          }
+        ])
+        .select()
+        .single();
 
-      // Add to messages array
-      messages.push(newMessage);
-      global.messages = messages;
+      if (error) {
+        console.error('Supabase error:', error);
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Database error' 
+        });
+      }
 
       return res.status(200).json({ 
         success: true, 
-        message: newMessage 
+        message: data 
       });
     }
 
