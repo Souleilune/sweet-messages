@@ -528,6 +528,99 @@
             transform: translateY(-2px);
         }
 
+        /* Delete Confirmation Modal */
+        .delete-confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-confirmation-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .delete-confirmation-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.5rem;
+            color: #ff4757;
+            margin-bottom: 20px;
+        }
+
+        .delete-confirmation-text {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .delete-confirmation-preview {
+            background: rgba(255, 71, 87, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ff4757;
+        }
+
+        .delete-confirmation-sender {
+            font-weight: 700;
+            color: #ff4757;
+            margin-bottom: 5px;
+        }
+
+        .delete-confirmation-message {
+            color: #666;
+            font-style: italic;
+        }
+
+        .delete-confirmation-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .delete-confirmation-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .delete-cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .delete-cancel-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .delete-confirm-btn {
+            background: #ff4757;
+            color: white;
+        }
+
+        .delete-confirm-btn:hover {
+            background: #ff3838;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -562,6 +655,15 @@
 
             .bubbles-container {
                 padding: 10px;
+            }
+
+            .delete-confirmation-buttons {
+                flex-direction: column;
+            }
+
+            .delete-confirmation-btn {
+                min-width: auto;
+                width: 100%;
             }
         }
     </style>
@@ -658,6 +760,27 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="delete-confirmation-modal" id="deleteConfirmationModal">
+        <div class="delete-confirmation-content">
+            <h3 class="delete-confirmation-title">⚠️ Confirm Delete</h3>
+            
+            <p class="delete-confirmation-text">
+                Are you sure you want to delete this message? This action cannot be undone.
+            </p>
+            
+            <div class="delete-confirmation-preview">
+                <div class="delete-confirmation-sender" id="confirmDeleteSender"></div>
+                <div class="delete-confirmation-message" id="confirmDeleteMessage"></div>
+            </div>
+            
+            <div class="delete-confirmation-buttons">
+                <button class="delete-confirmation-btn delete-cancel-btn" id="deleteCancelBtn">Cancel</button>
+                <button class="delete-confirmation-btn delete-confirm-btn" id="deleteConfirmBtn">Delete Message</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // API configuration
         const API_BASE = window.location.origin; // Use same domain as frontend
@@ -668,6 +791,34 @@
         
         // Admin password
         const ADMIN_PASSWORD = 'sweetadmin123';
+
+        // Utility function to format timestamps
+        function formatTimestamp(timestamp) {
+            try {
+                // Handle both ISO strings and regular date strings
+                const date = new Date(timestamp);
+                
+                // Check if date is valid
+                if (isNaN(date.getTime())) {
+                    return timestamp; // Return original if can't parse
+                }
+                
+                // Format options
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                };
+                
+                return date.toLocaleDateString('en-US', options);
+            } catch (error) {
+                console.error('Error formatting timestamp:', error);
+                return timestamp; // Return original if error
+            }
+        }
 
         // API functions
         async function fetchMessages() {
@@ -854,17 +1005,45 @@
             }
         });
 
-        // Delete message
-        document.getElementById('deleteMessageBtn').addEventListener('click', async function() {
-            if (currentMessageId && confirm('Are you sure you want to delete this message?')) {
+        // Delete message button - now shows confirmation modal
+        document.getElementById('deleteMessageBtn').addEventListener('click', function() {
+            if (currentMessageId) {
+                const message = messages.find(msg => msg.id === currentMessageId);
+                if (message) {
+                    // Hide message detail modal
+                    document.getElementById('messageDetailModal').style.display = 'none';
+                    
+                    // Show delete confirmation modal
+                    document.getElementById('confirmDeleteSender').textContent = `From: ${message.sender}`;
+                    document.getElementById('confirmDeleteMessage').textContent = message.message;
+                    document.getElementById('deleteConfirmationModal').style.display = 'flex';
+                }
+            }
+        });
+
+        // Delete confirmation modal handlers
+        document.getElementById('deleteCancelBtn').addEventListener('click', function() {
+            document.getElementById('deleteConfirmationModal').style.display = 'none';
+        });
+
+        document.getElementById('deleteConfirmBtn').addEventListener('click', async function() {
+            if (currentMessageId) {
                 const success = await deleteMessage(currentMessageId);
                 
                 if (success) {
-                    document.getElementById('messageDetailModal').style.display = 'none';
+                    document.getElementById('deleteConfirmationModal').style.display = 'none';
                     displayMessageBubbles();
+                    currentMessageId = null;
                 } else {
                     alert('Failed to delete message. Please try again.');
                 }
+            }
+        });
+
+        // Close delete confirmation modal when clicking outside
+        document.getElementById('deleteConfirmationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
             }
         });
 
@@ -930,14 +1109,26 @@
             });
         }
 
-        // Show message detail
+        // Show message detail with formatted timestamp
         function showMessageDetail(message) {
             currentMessageId = message.id;
             document.getElementById('detailSender').textContent = message.sender;
-            document.getElementById('detailDate').textContent = message.timestamp;
+            
+            // Format the timestamp using our utility function
+            const formattedDate = formatTimestamp(message.timestamp || message.created_at);
+            document.getElementById('detailDate').textContent = `Sent: ${formattedDate}`;
+            
             document.getElementById('detailText').textContent = message.message;
             document.getElementById('messageDetailModal').style.display = 'flex';
         }
+
+        // Handle ESC key to close modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('messageDetailModal').style.display = 'none';
+                document.getElementById('deleteConfirmationModal').style.display = 'none';
+            }
+        });
 
         // Initialize
         createHearts();
